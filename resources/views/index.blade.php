@@ -7,10 +7,10 @@
                 <h3 class="fw-bolder">SPMB SMKN 4 TANGERANG</h3>
             </div>
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary w-100 py-4 mb-3 fs-1" data-bs-toggle="modal"
+            {{-- <button type="button" class="btn btn-primary w-100 py-4 mb-3 fs-1" data-bs-toggle="modal"
                 data-bs-target="#modalAmbilAntrian"><i class="bi bi-ticket-perforated d-block"></i>
                 Ambil Nomor Antrian
-            </button>
+            </button> --}}
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary w-100 py-4 mb-3 fs-1" data-bs-toggle="modal"
                 data-bs-target="#modalAmbilAntrian" disabled><i class="bi bi-ticket-perforated d-block"></i>
