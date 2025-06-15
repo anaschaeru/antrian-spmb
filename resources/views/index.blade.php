@@ -28,6 +28,11 @@
                         <form action="{{ route('antrian.store') }}" method="POST">
                             <div class="modal-body">
                                 @csrf
+                                <label class="text-warning mb-2">*) Masukan Nomor Formulir, sesuai yang tertera pada bukti
+                                    cetak
+                                    pendaftaran
+                                    online dari <a href="https://spmb.bantenprov.go.id/">https://spmb.bantenprov.go.id</a>.
+                                </label>
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control @error('nomor_formulir') is-invalid @enderror"
                                         id="floatingInput" placeholder="Nomor Formulir" name="nomor_formulir" maxlength="15"
@@ -87,6 +92,10 @@
                                     @enderror
                                     <label for="floatingInput">Nomor Telepon</label>
                                 </div>
+                                <label class="text-warning mb-2">*) Pililah Konsentrasi Keahlian 1
+                                    sesuai dengan yang tertera pada bukti cetak pendaftaran online dari <a
+                                        href="https://spmb.bantenprov.go.id/">https://spmb.bantenprov.go.id</a>.
+                                </label>
                                 <div class="mb-3">
                                     <label for="konsentrasi_1">Pilihan Konsentrasi Keahlian Ke-1:</label>
                                     <select name="konsentrasi_1" class="form-select" required>
