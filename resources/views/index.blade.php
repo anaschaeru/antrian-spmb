@@ -139,14 +139,13 @@
                         <form action="/cetak-antrian" method="POST">
                             <div class="modal-body">
                                 @csrf
+                                <label class="text-warning mb-2">*) Masukan Nomor Peserta, sesuai yang tertera pada
+                                    bukti
+                                    cetak
+                                    pendaftaran
+                                    online dari <a href="https://spmb.bantenprov.go.id/">https://spmb.bantenprov.go.id</a>.
+                                </label>
                                 <div class="form-floating mb-3">
-                                    <label class="text-warning mb-2">*) Masukan Nomor Peserta, sesuai yang tertera pada
-                                        bukti
-                                        cetak
-                                        pendaftaran
-                                        online dari <a
-                                            href="https://spmb.bantenprov.go.id/">https://spmb.bantenprov.go.id</a>.
-                                    </label>
                                     <input type="text"
                                         class="form-control @error('nomor_formulir') is-invalid @enderror"
                                         id="floatingInput" placeholder="Nomor Peserta" name="nomor_formulir"
