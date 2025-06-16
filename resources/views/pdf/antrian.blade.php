@@ -86,7 +86,7 @@
             <input type="checkbox"><label> Fotokopi Ijazah / SKL (Legalisir)</label><br>
         </div>
         <div>
-            <input type="checkbox"><label> Fotokopi Nilai Raport 1 s.d. 6 (Legalisir)</label><br>
+            <input type="checkbox"><label> Fotokopi Nilai Raport 1 s.d. 5 (Legalisir)</label><br>
         </div>
         <div>
             <input type="checkbox"><label> Fotokopi Sertifikat/Piagam Prestasi (Jika ada)</label><br>
