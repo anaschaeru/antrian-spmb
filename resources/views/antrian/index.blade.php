@@ -14,7 +14,15 @@
     </div>
 
     <div class="row">
-        @foreach ([['bg' => 'primary', 'title' => 'Total Antrian', 'value' => $totalAntrian], ['bg' => 'success', 'title' => 'Sudah Menyerahkan', 'value' => $sudahMenyerahkan], ['bg' => 'danger', 'title' => 'Belum Menyerahkan', 'value' => $belumMenyerahkan]] as $card)
+        @php
+            $cardData = [
+                ['bg' => 'primary', 'title' => 'Total Antrian', 'value' => $totalAntrian],
+                ['bg' => 'success', 'title' => 'Sudah Menyerahkan', 'value' => $sudahMenyerahkan],
+                ['bg' => 'danger', 'title' => 'Belum Menyerahkan', 'value' => $belumMenyerahkan],
+            ];
+        @endphp
+
+        @foreach ($cardData as $card)
             <div class="col-md-4 mb-3 mb-md-0">
                 <div class="card bg-{{ $card['bg'] }} text-white">
                     <div class="card-body">
@@ -32,7 +40,7 @@
                 <div class="card-body">
                     <h2 class="mt-2">Daftar Antrian</h2>
                     <div class="table-responsive">
-                        <table id="example" class="table row-border" width="100%">
+                        <table id="antrian-table" class="table row-border" width="100%">
                             <thead>
                                 <tr class="text-center align-middle">
                                     <th class="text-center">Antrian</th>
@@ -150,31 +158,32 @@
                     <form action="{{ route('update.status', $item->id) }}" method="POST"
                         id="updateForm{{ $item->id }}">
                         @csrf
-                        <div class="modal-body">
-                            <!-- Ruang Tes (1-15) -->
+                        <div class="modal-body p-4">
+                            <h4 class="text-uppercase text-center mb-4">
+                                {{ $item->nama }}
+                            </h4>
                             <div class="mb-4">
                                 <label class="form-label mb-2 d-block">Ruang Tes:</label>
                                 <div class="btn-group-toggle" data-toggle="buttons">
                                     @for ($i = 1; $i <= 15; $i++)
                                         <label
-                                            class="btn btn-outline-primary m-1 @if (($item->ruang_tes ?? old('ruang_tes')) == $i) active @endif">
+                                            class="btn btn-outline-primary m-1 @if ($item->ruang_tes == $i) active @endif">
                                             <input type="radio" name="ruang_tes" value="{{ $i }}"
-                                                @if (($item->ruang_tes ?? old('ruang_tes')) == $i) checked @endif required>
+                                                @if ($item->ruang_tes == $i) checked @endif required>
                                             {{ $i }}
                                         </label>
                                     @endfor
                                 </div>
                             </div>
 
-                            <!-- Sesi Tes (1-3) -->
                             <div class="mb-4">
                                 <label class="form-label mb-2 d-block">Sesi Tes:</label>
                                 <div class="btn-group-toggle" data-toggle="buttons">
                                     @for ($i = 1; $i <= 3; $i++)
                                         <label
-                                            class="btn btn-outline-primary m-1 @if (($item->sesi_tes ?? old('sesi_tes')) == $i) active @endif">
+                                            class="btn btn-outline-primary m-1 @if ($item->sesi_tes == $i) active @endif">
                                             <input type="radio" name="sesi_tes" value="{{ $i }}"
-                                                @if (($item->sesi_tes ?? old('sesi_tes')) == $i) checked @endif required>
+                                                @if ($item->sesi_tes == $i) checked @endif required>
                                             {{ $i }}
                                         </label>
                                     @endfor
@@ -182,28 +191,25 @@
                             </div>
                             <div class="mb-4">
                                 <label class="form-label d-block mb-2">Status Berkas:</label>
-                                <!-- Belum Menyerahkan Option -->
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="status_berkas" id="status0"
-                                        value="0"
-                                        {{ ($item->status_berkas ?? old('status_berkas', 0)) == 0 ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="status0">
+                                    <input class="form-check-input" type="radio" name="status_berkas"
+                                        id="status0{{ $item->id }}" value="0"
+                                        {{ $item->status_berkas == 0 ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="status0{{ $item->id }}">
                                         Belum Menyerahkan
                                     </label>
                                 </div>
-
-                                <!-- Sudah Menyerahkan Option -->
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="status_berkas" id="status1"
-                                        value="1"
-                                        {{ ($item->status_berkas ?? old('status_berkas', 0)) == 1 ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="status1">
+                                    <input class="form-check-input" type="radio" name="status_berkas"
+                                        id="status1{{ $item->id }}" value="1"
+                                        {{ $item->status_berkas == 1 ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="status1{{ $item->id }}">
                                         Sudah Menyerahkan
                                     </label>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer justify-content-start">
+                        <div class="modal-footer justify-content-start p-4">
                             <button type="submit" class="btn btn-success me-2">Simpan</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                         </div>
@@ -214,8 +220,19 @@
     @endforeach
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize DataTable with deferRender for better performance
+            $('#antrian-table').DataTable({
+                deferRender: true,
+                responsive: true,
+                pageLength: 25,
+                order: [
+                    [0, 'asc']
+                ]
+            });
+        });
+
         function validateToken(id) {
-            // Your token validation logic here
             document.getElementById('updateForm' + id).submit();
         }
     </script>
