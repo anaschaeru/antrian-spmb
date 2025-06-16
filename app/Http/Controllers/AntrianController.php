@@ -9,93 +9,77 @@ use Illuminate\Support\Carbon;
 class AntrianController extends Controller
 {
 
+    const AVAILABLE_DATES = [
+        '2025-06-17',
+        '2025-06-18',
+        '2025-06-19',
+        '2025-06-20',
+        '2025-06-23',
+        '2025-06-24',
+    ];
 
-    // tampilkan daftar antrian
+    const MAX_QUEUE_PER_DAY = 250;
+    const VALID_TOKEN = '048025';
+
     public function index()
     {
-        // Cek apakah token sudah tersimpan dalam sesi
-        if (!session()->has('token_valid')) {
-            return view('antrian.token'); // Tampilkan input token terlebih dahulu
+        if (!session('token_valid')) {
+            return view('antrian.token');
         }
 
         $antrians = Antrian::orderBy('nomor_antrian')->get();
-
-        // total antrian
         $totalAntrian = $antrians->count();
-        if ($totalAntrian > 0) {
-            $antrians->each(function ($antrian, $index) use ($totalAntrian) {
-                $antrian->position = $index + 1;
-                $antrian->total = $totalAntrian;
-            });
-        }
 
-        $totalAntrian = Antrian::count();
-        $sudahMenyerahkan = Antrian::where('status_berkas', true)->count();
-        $belumMenyerahkan = Antrian::where('status_berkas', false)->count();
-        return view('antrian.index', compact('antrians', 'totalAntrian', 'totalAntrian', 'sudahMenyerahkan', 'belumMenyerahkan'));
+        $antrians->each(function ($antrian, $index) use ($totalAntrian) {
+            $antrian->position = $index + 1;
+            $antrian->total = $totalAntrian;
+        });
+
+        return view('antrian.index', [
+            'antrians' => $antrians,
+            'totalAntrian' => $totalAntrian,
+            'sudahMenyerahkan' => Antrian::where('status_berkas', true)->count(),
+            'belumMenyerahkan' => Antrian::where('status_berkas', false)->count()
+        ]);
     }
 
-    // simpan antrian baru
     public function store(Request $request)
     {
-        $request->validate([
-            'nomor_formulir' => 'required|unique:antrian|string|min:10|max:10',
+        $validated = $request->validate([
+            'nomor_formulir' => 'required|unique:antrian|string|size:10',
             'nama' => 'required|string|max:100',
             'tanggal_lahir' => 'required|date',
             'asal_sekolah' => 'required|string|max:100',
-            'nomor_telpon' => 'required|string|max:13|min:12',
+            'nomor_telpon' => 'required|string|min:12|max:13',
             'konsentrasi_1' => 'nullable|string|max:50',
         ]);
 
-        $tanggalTersedia = [
-            Carbon::create(2025, 6, 17),
-            Carbon::create(2025, 6, 18),
-            Carbon::create(2025, 6, 19),
-            Carbon::create(2025, 6, 20),
-            Carbon::create(2025, 6, 23),
-            Carbon::create(2025, 6, 24),
-        ];
-
-        $tanggalKumpul = null;
-
-        foreach ($tanggalTersedia as $tanggal) {
-            $jumlahAntrian = Antrian::where('tanggal_kumpul', $tanggal->format('Y-m-d'))->count();
-            if ($jumlahAntrian <  250) {
-                $tanggalKumpul = $tanggal;
-                break;
-            }
-        }
-
+        $tanggalKumpul = $this->getAvailableDate();
         if (!$tanggalKumpul) {
-            return redirect()->back()->with('error', 'Kuota penuh, pendaftaran ditutup.');
+            return back()->with('error', 'Kuota penuh, pendaftaran ditutup.');
         }
 
         try {
             $nomorAntrian = Antrian::max('nomor_antrian') + 1;
 
             Antrian::create([
-                'nomor_formulir' => $request->nomor_formulir,
-                'nama' => $request->nama,
-                'tanggal_lahir' => $request->tanggal_lahir,
-                'asal_sekolah' => $request->asal_sekolah,
-                'nomor_telpon' => $request->nomor_telpon,
+                ...$validated,
                 'nomor_antrian' => $nomorAntrian,
-                'tanggal_kumpul' => $tanggalKumpul->format('Y-m-d'),
-                'konsentrasi_1' => $request->input('konsentrasi_1', null),
+                'tanggal_kumpul' => $tanggalKumpul,
             ]);
 
             return redirect('/')->with([
                 'success_nomor' => $nomorAntrian,
-                'success_tanggal' => $tanggalKumpul->translatedFormat('l, j F Y')
+                'success_tanggal' => Carbon::parse($tanggalKumpul)->translatedFormat('l, j F Y')
             ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan sistem, silakan coba lagi.');
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.')->withInput();
         }
     }
 
     public function updateBiodata(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nomor_formulir' => 'required',
             'nama' => 'required',
             'tanggal_lahir' => 'required|date',
@@ -103,76 +87,47 @@ class AntrianController extends Controller
             'nomor_telpon' => 'required',
         ]);
 
-        $antrian = Antrian::findOrFail($id);
-        $antrian->update([
-            'nomor_formulir' => $request->nomor_formulir,
-            'nama' => $request->nama,
-            'tanggal_lahir' => $request->tanggal_lahir,
-            'asal_sekolah' => $request->asal_sekolah,
-            'nomor_telpon' => $request->nomor_telpon
-        ]);
+        Antrian::findOrFail($id)->update($validated);
 
-        return redirect()->back()->with('success', 'Biodata siswa berhasil diperbarui!');
+        return back()->with('success', 'Biodata siswa berhasil diperbarui!');
     }
 
     public function updateStatus(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'ruang_tes' => 'required',
             'sesi_tes' => 'required',
             'status_berkas' => 'required|boolean'
         ]);
 
-        $antrian = Antrian::findOrFail($id);
-        $antrian->update([
-            'ruang_tes' => $request->ruang_tes,
-            'sesi_tes' => $request->sesi_tes,
-            'status_berkas' => $request->status_berkas
-        ]);
+        Antrian::findOrFail($id)->update($validated);
 
-
-        return redirect()->back()->with('success_update', 'Data tes minat bakat berhasil diperbarui!');
-    }
-
-    public function showAntrian(Request $request)
-    {
-
-
-        // Jika token sudah valid, tampilkan data antrian
-        $antrians = Antrian::orderBy('nomor_antrian')->get();
-
-        // total antrian
-        $totalAntrian = $antrians->count();
-        if ($totalAntrian > 0) {
-            $antrians->each(function ($antrian, $index) use ($totalAntrian) {
-                $antrian->position = $index + 1;
-                $antrian->total = $totalAntrian;
-            });
-        }
-
-        $totalAntrian = Antrian::count();
-        $sudahMenyerahkan = Antrian::where('status_berkas', true)->count();
-        $belumMenyerahkan = Antrian::where('status_berkas', false)->count();
-        return view('antrian.index', compact('antrians', 'totalAntrian', 'totalAntrian', 'sudahMenyerahkan', 'belumMenyerahkan'));
+        return back()->with('success_update', 'Data tes minat bakat berhasil diperbarui!');
     }
 
     public function validasiToken(Request $request)
     {
-        $request->validate(['token' => 'required']);
-
-        $tokenBenar = "048025"; // Token yang benar
-
-        if ($request->token === $tokenBenar) {
-            session(['token_valid' => true]); // Simpan validasi token di sesi
-            return redirect()->route('antrian')->with('success-login', 'Token valid! Anda sekarang bisa mengakses halaman antrian.');
+        if ($request->validate(['token' => 'required'])['token'] === self::VALID_TOKEN) {
+            session(['token_valid' => true]);
+            return redirect()->route('antrian')->with('success-login', 'Token valid!');
         }
 
-        return redirect('/')->with('error', 'Token tidak valid, silakan coba lagi.');
+        return back()->with('error', 'Token tidak valid, silakan coba lagi.');
     }
 
     public function logout()
     {
-        session()->forget('token_valid'); // Hapus sesi token
+        session()->forget('token_valid');
         return redirect('/')->with('success', 'Anda telah logout.');
+    }
+
+    protected function getAvailableDate(): ?string
+    {
+        foreach (self::AVAILABLE_DATES as $date) {
+            if (Antrian::where('tanggal_kumpul', $date)->count() < self::MAX_QUEUE_PER_DAY) {
+                return $date;
+            }
+        }
+        return null;
     }
 }
