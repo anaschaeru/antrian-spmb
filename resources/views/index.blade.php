@@ -140,12 +140,19 @@
                             <div class="modal-body">
                                 @csrf
                                 <div class="form-floating mb-3">
+                                    <label class="text-warning mb-2">*) Masukan Nomor Peserta, sesuai yang tertera pada
+                                        bukti
+                                        cetak
+                                        pendaftaran
+                                        online dari <a
+                                            href="https://spmb.bantenprov.go.id/">https://spmb.bantenprov.go.id</a>.
+                                    </label>
                                     <input type="text"
                                         class="form-control @error('nomor_formulir') is-invalid @enderror"
-                                        id="floatingInput" placeholder="Nomor Formulir" name="nomor_formulir"
+                                        id="floatingInput" placeholder="Nomor Peserta" name="nomor_formulir"
                                         maxlength="10" inputmode="numeric" minlength="10"
                                         value="{{ old('nomor_formulir') }}" required>
-                                    <label for="floatingInput">Nomor Formulir</label>
+                                    <label for="floatingInput">Nomor Peserta</label>
                                     @error('nomor_formulir')
                                         <div class="alert alert-danger mt-2">
                                             {{ $message }}
