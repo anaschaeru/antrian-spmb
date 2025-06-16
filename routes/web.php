@@ -11,9 +11,10 @@ use App\Http\Controllers\AntrianController;
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::post('/cetak-antrian', [HomeController::class, 'checkAndDownloadPdf']);
 
-// Route::get('/antrian', [AntrianController::class, 'index'])->name('antrian.index');
-Route::get('/antrian', [AntrianController::class, 'showAntrian'])->name('antrian');
+Route::get('/antrian', [AntrianController::class, 'index'])->name('antrian');
+// Route::get('/antrian', [AntrianController::class, 'showAntrian'])->name('antrian');
 Route::post('/validasi-token', [AntrianController::class, 'validasiToken'])->name('validasi.token');
+Route::put('/update-biodata/{id}', [AntrianController::class, 'updateBiodata'])->name('update.biodata');
 Route::post('/logout', [AntrianController::class, 'logout'])->name('logout');
 
 Route::post('/antrian', [AntrianController::class, 'store'])->name('antrian.store');

@@ -8,11 +8,16 @@ use Illuminate\Support\Carbon;
 
 class AntrianController extends Controller
 {
-    //
+
 
     // tampilkan daftar antrian
     public function index()
     {
+        // Cek apakah token sudah tersimpan dalam sesi
+        if (!session()->has('token_valid')) {
+            return view('antrian.token'); // Tampilkan input token terlebih dahulu
+        }
+
         $antrians = Antrian::orderBy('nomor_antrian')->get();
 
         // total antrian
@@ -88,6 +93,28 @@ class AntrianController extends Controller
         }
     }
 
+    public function updateBiodata(Request $request, $id)
+    {
+        $request->validate([
+            'nomor_formulir' => 'required',
+            'nama' => 'required',
+            'tanggal_lahir' => 'required|date',
+            'asal_sekolah' => 'required',
+            'nomor_telpon' => 'required',
+        ]);
+
+        $antrian = Antrian::findOrFail($id);
+        $antrian->update([
+            'nomor_formulir' => $request->nomor_formulir,
+            'nama' => $request->nama,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'asal_sekolah' => $request->asal_sekolah,
+            'nomor_telpon' => $request->nomor_telpon
+        ]);
+
+        return redirect()->back()->with('success', 'Biodata siswa berhasil diperbarui!');
+    }
+
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
@@ -109,10 +136,7 @@ class AntrianController extends Controller
 
     public function showAntrian(Request $request)
     {
-        // Cek apakah token sudah tersimpan dalam sesi
-        if (!session()->has('token_valid')) {
-            return view('antrian.token'); // Tampilkan input token terlebih dahulu
-        }
+
 
         // Jika token sudah valid, tampilkan data antrian
         $antrians = Antrian::orderBy('nomor_antrian')->get();
@@ -130,9 +154,6 @@ class AntrianController extends Controller
         $sudahMenyerahkan = Antrian::where('status_berkas', true)->count();
         $belumMenyerahkan = Antrian::where('status_berkas', false)->count();
         return view('antrian.index', compact('antrians', 'totalAntrian', 'totalAntrian', 'sudahMenyerahkan', 'belumMenyerahkan'));
-
-        // $antrian = Antrian::all();
-        return view('antrian.index', compact('antrian'));
     }
 
     public function validasiToken(Request $request)
