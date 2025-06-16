@@ -34,7 +34,7 @@ class AntrianController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nomor_formulir' => 'required|unique:antrian|string|min:15|max:15',
+            'nomor_formulir' => 'required|unique:antrian|string|min:10|max:10',
             'nama' => 'required|string|max:100',
             'tanggal_lahir' => 'required|date',
             'asal_sekolah' => 'required|string|max:100',
