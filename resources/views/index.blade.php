@@ -143,7 +143,7 @@
                                     <input type="text"
                                         class="form-control @error('nomor_formulir') is-invalid @enderror"
                                         id="floatingInput" placeholder="Nomor Formulir" name="nomor_formulir"
-                                        maxlength="15" inputmode="numeric" minlength="15"
+                                        maxlength="10" inputmode="numeric" minlength="10"
                                         value="{{ old('nomor_formulir') }}" required>
                                     <label for="floatingInput">Nomor Formulir</label>
                                     @error('nomor_formulir')
