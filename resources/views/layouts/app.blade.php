@@ -103,6 +103,40 @@
         }
     </script>
 
+    @if (session('success-login'))
+        <script>
+            Swal.fire({
+                title: 'Berhasil!',
+                text: "{{ session('success-login') }}",
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                title: 'Gagal!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
+
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                title: 'Logout Berhasil!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
+
 </body>
 
 </html>

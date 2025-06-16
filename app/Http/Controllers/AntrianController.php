@@ -106,4 +106,52 @@ class AntrianController extends Controller
 
         return redirect()->back()->with('success_update', 'Data tes minat bakat berhasil diperbarui!');
     }
+
+    public function showAntrian(Request $request)
+    {
+        // Cek apakah token sudah tersimpan dalam sesi
+        if (!session()->has('token_valid')) {
+            return view('antrian.token'); // Tampilkan input token terlebih dahulu
+        }
+
+        // Jika token sudah valid, tampilkan data antrian
+        $antrians = Antrian::orderBy('nomor_antrian')->get();
+
+        // total antrian
+        $totalAntrian = $antrians->count();
+        if ($totalAntrian > 0) {
+            $antrians->each(function ($antrian, $index) use ($totalAntrian) {
+                $antrian->position = $index + 1;
+                $antrian->total = $totalAntrian;
+            });
+        }
+
+        $totalAntrian = Antrian::count();
+        $sudahMenyerahkan = Antrian::where('status_berkas', true)->count();
+        $belumMenyerahkan = Antrian::where('status_berkas', false)->count();
+        return view('antrian.index', compact('antrians', 'totalAntrian', 'totalAntrian', 'sudahMenyerahkan', 'belumMenyerahkan'));
+
+        // $antrian = Antrian::all();
+        return view('antrian.index', compact('antrian'));
+    }
+
+    public function validasiToken(Request $request)
+    {
+        $request->validate(['token' => 'required']);
+
+        $tokenBenar = "048025"; // Token yang benar
+
+        if ($request->token === $tokenBenar) {
+            session(['token_valid' => true]); // Simpan validasi token di sesi
+            return redirect()->route('antrian')->with('success-login', 'Token valid! Anda sekarang bisa mengakses halaman antrian.');
+        }
+
+        return redirect('/')->with('error', 'Token tidak valid, silakan coba lagi.');
+    }
+
+    public function logout()
+    {
+        session()->forget('token_valid'); // Hapus sesi token
+        return redirect('/')->with('success', 'Anda telah logout.');
+    }
 }

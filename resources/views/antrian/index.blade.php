@@ -1,10 +1,19 @@
 @extends('layouts.app')
 @section('content')
     <div class="row mt-4">
-        <div class="col-md-12">
-            <h3>Selamat Datang di Sistem Antrian Pendaftaran Siswa Baru</h3>
-            <p>Silakan isi formulir di bawah ini untuk mengambil nomor antrian.</p>
+        <div class="col-12 d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h3>Selamat Datang di Sistem Antrian Pendaftaran Siswa Baru</h3>
+                <p>Silakan isi formulir di bawah ini untuk mengambil nomor antrian.</p>
+            </div>
+            <div>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">Logout</button>
+                </form>
+            </div>
         </div>
+
     </div>
     <div class="row">
         <div class="col-md-4">
