@@ -60,7 +60,8 @@
                                                 class="btn btn-outline-secondary fw-bolder">{{ $item->nomor_antrian }}
                                             </button>
                                         </td>
-                                        <td>{{ $item->nomor_formulir }}<br>{{ $item->nama }}<br><span
+                                        <td class="text-uppercase">
+                                            {{ $item->nomor_formulir }}<br>{{ $item->nama }}<br><span
                                                 class="text-secondary">{{ $item->asal_sekolah }}</span>
                                         </td>
                                         {{-- <td>{{ $item->tanggal_lahir }}</td> --}}
