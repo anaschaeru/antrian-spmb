@@ -55,7 +55,7 @@ class AntrianController extends Controller
 
         foreach ($tanggalTersedia as $tanggal) {
             $jumlahAntrian = Antrian::where('tanggal_kumpul', $tanggal->format('Y-m-d'))->count();
-            if ($jumlahAntrian < 300) {
+            if ($jumlahAntrian <  250) {
                 $tanggalKumpul = $tanggal;
                 break;
             }
