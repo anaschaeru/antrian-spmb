@@ -35,8 +35,8 @@
                                 </label>
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control @error('nomor_formulir') is-invalid @enderror"
-                                        id="floatingInput" placeholder="Nomor Formulir" name="nomor_formulir" maxlength="15"
-                                        inputmode="numeric" minlength="15" value="{{ old('nomor_formulir') }}" required>
+                                        id="floatingInput" placeholder="Nomor Formulir" name="nomor_formulir" maxlength="10"
+                                        inputmode="numeric" minlength="10" value="{{ old('nomor_formulir') }}" required>
                                     <label for="floatingInput">Nomor Formulir</label>
                                     @error('nomor_formulir')
                                         <div class="alert alert-danger mt-2">
