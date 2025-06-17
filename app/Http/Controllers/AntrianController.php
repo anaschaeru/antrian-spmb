@@ -130,4 +130,16 @@ class AntrianController extends Controller
         }
         return null;
     }
+
+    public function getBiodataForm($id)
+    {
+        $item = Antrian::findOrFail($id);
+        return view('partials.biodata_form', compact('item'))->render();
+    }
+
+    public function getStatusForm($id)
+    {
+        $item = Antrian::findOrFail($id);
+        return view('partials.status_form', compact('item'))->render();
+    }
 }

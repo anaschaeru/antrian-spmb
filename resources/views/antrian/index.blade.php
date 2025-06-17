@@ -209,7 +209,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer justify-content-start p-4">
+                        <div class="modal-footer justify-content-start">
                             <button type="submit" class="btn btn-success me-2">Simpan</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                         </div>
