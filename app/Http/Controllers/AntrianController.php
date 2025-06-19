@@ -95,9 +95,9 @@ class AntrianController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $validated = $request->validate([
-            'ruang_tes' => 'required',
-            'sesi_tes' => 'required',
-            'status_berkas' => 'required|boolean'
+            'ruang_tes' => 'nullable|string|min:1',
+            'sesi_tes' => 'nullable|string|min:1',
+            'status_berkas' => 'boolean'
         ]);
 
         Antrian::findOrFail($id)->update($validated);
