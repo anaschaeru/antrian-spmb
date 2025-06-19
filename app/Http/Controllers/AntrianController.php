@@ -19,7 +19,7 @@ class AntrianController extends Controller
     ];
 
     const MAX_QUEUE_PER_DAY = 250;
-    const VALID_TOKEN = '048025';
+    const VALID_TOKEN = 'SPMB80';
 
     public function index()
     {

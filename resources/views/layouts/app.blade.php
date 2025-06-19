@@ -41,30 +41,6 @@
     <script src="{{ asset('js/dataTables.bootstrap5.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Initialization scripts -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize DataTables
-            new DataTable('#example');
-            new DataTable('#tableMinatBakat');
-
-            // Token validation function
-            window.validateToken = function(id) {
-                const tokenInput = document.getElementById('token' + id).value;
-                if (tokenInput !== "048025") {
-                    Swal.fire({
-                        title: 'Gagal!',
-                        text: 'Token tidak valid, silakan coba lagi!',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                    return false;
-                }
-                return true;
-            };
-        });
-    </script>
-
     <!-- Session messages handling -->
     <script>
         @if (session('success_nomor') && session('success_tanggal'))
