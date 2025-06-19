@@ -165,6 +165,12 @@
                             <div class="mb-4">
                                 <label class="form-label mb-2 d-block">Ruang Tes:</label>
                                 <div class="btn-group-toggle" data-toggle="buttons">
+                                    <label
+                                        class="btn btn-outline-primary m-1 @if ($item->ruang_tes == null) active @endif">
+                                        <input type="radio" name="ruang_tes" value=""
+                                            @if ($item->ruang_tes == null) checked @endif required>
+                                        No set
+                                    </label>
                                     @for ($i = 1; $i <= 15; $i++)
                                         <label
                                             class="btn btn-outline-primary m-1 @if ($item->ruang_tes == $i) active @endif">
@@ -179,6 +185,12 @@
                             <div class="mb-4">
                                 <label class="form-label mb-2 d-block">Sesi Tes:</label>
                                 <div class="btn-group-toggle" data-toggle="buttons">
+                                    <label
+                                        class="btn btn-outline-primary m-1 @if ($item->sesi_tes == null) active @endif">
+                                        <input type="radio" name="sesi_tes" value=""
+                                            @if ($item->sesi_tes == null) checked @endif required>
+                                        Not Set
+                                    </label>
                                     @for ($i = 1; $i <= 3; $i++)
                                         <label
                                             class="btn btn-outline-primary m-1 @if ($item->sesi_tes == $i) active @endif">
