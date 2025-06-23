@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Antrian;
 use Illuminate\Http\Request;
+use App\Imports\AntrianImport;
 use Illuminate\Support\Carbon;
+use Yajra\DataTables\DataTables;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AntrianController extends Controller
 {
@@ -141,5 +144,81 @@ class AntrianController extends Controller
     {
         $item = Antrian::findOrFail($id);
         return view('partials.status_form', compact('item'))->render();
+    }
+
+
+    public function import(Request $request)
+    {
+        $request->validate(['file' => 'required|mimes:xlsx,xls']);
+        Excel::import(new AntrianImport, $request->file('file'));
+        return redirect()->back()->with('success', 'Data antrian berhasil diimpor.');
+    }
+
+    public function datatable(Request $request)
+    {
+        $query = Antrian::query();
+
+        return DataTables::of($query)
+            ->addColumn('action', function ($antrian) {
+                return '
+                <button class="btn btn-warning btn-sm edit-btn"
+                    data-id="' . $antrian->id . '"
+                    data-modal-type="edit">
+                    <span class="bi bi-pencil"></span>
+                </button>
+                <button class="btn btn-primary btn-sm update-btn"
+                    data-id="' . $antrian->id . '"
+                    data-modal-type="update">
+                    Update Status
+                </button>
+            ';
+            })
+            ->editColumn('status_berkas', function ($antrian) {
+                return $antrian->status_berkas
+                    ? '<i class="bi bi-check-circle text-success fs-3"></i>'
+                    : '<i class="bi bi-x-circle text-danger fs-3"></i>';
+            })
+            ->editColumn('ruang_tes', function ($antrian) {
+                return 'Ruang: ' . ($antrian->ruang_tes ?? 'Belum ditentukan') . '<br>' .
+                    'Sesi: ' . ($antrian->sesi_tes ?? 'Belum ditentukan');
+            })
+            ->rawColumns(['action', 'status_berkas', 'ruang_tes'])
+            ->toJson();
+    }
+
+    public function getModal($id, $type)
+    {
+        $antrian = Antrian::findOrFail($id);
+
+        if ($type === 'edit') {
+            return view('modals.edit', compact('antrian'));
+        } elseif ($type === 'update') {
+            return view('modals.update', compact('antrian'));
+        }
+
+        abort(404);
+    }
+
+    public function edit($id)
+    {
+        $antrian = Antrian::findOrFail($id);
+        return response()->json($antrian);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'nomor_formulir' => 'required|string|size:10|unique:antrian,nomor_formulir,' . $id,
+            'nama' => 'required|string|max:100',
+            'tanggal_lahir' => 'required|date',
+            'asal_sekolah' => 'required|string|max:100',
+            'nomor_telpon' => 'required|string|min:10|max:13',
+            'konsentrasi_1' => 'required|string|max:50',
+        ]);
+
+        $antrian = Antrian::findOrFail($id);
+        $antrian->update($validated);
+
+        return response()->json(['message' => 'Data berhasil diperbarui']);
     }
 }

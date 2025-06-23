@@ -18,6 +18,7 @@ Route::put('/update-biodata/{id}', [AntrianController::class, 'updateBiodata'])-
 Route::post('/logout', [AntrianController::class, 'logout'])->name('logout');
 
 Route::post('/antrian', [AntrianController::class, 'store'])->name('antrian.store');
+Route::post('/antrian/import', [AntrianController::class, 'import'])->name('antrian.import');
 Route::post('/update-status/{id}', [AntrianController::class, 'updateStatus'])->name('update.status');;
 Route::get('/tes-minat-bakat', [HomeController::class, 'tesMinatBakat'])->name('tes.minat.bakat');
 

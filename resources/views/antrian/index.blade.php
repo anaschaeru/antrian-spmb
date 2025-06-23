@@ -5,6 +5,12 @@
             <div>
                 <h3>Selamat Datang di Sistem Antrian Pendaftaran Siswa Baru</h3>
                 <p>Silakan isi formulir di bawah ini untuk mengambil nomor antrian.</p>
+                <form action="{{ route('antrian.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <label for="file">Pilih file Excel:</label>
+                    <input type="file" name="file" class="form-control" accept=".xlsx, .xls" required>
+                    <button type="submit" class="btn btn-primary mt-2">Import</button>
+                </form>
             </div>
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
