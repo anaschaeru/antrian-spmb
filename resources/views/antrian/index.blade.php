@@ -40,7 +40,7 @@
         @endforeach
     </div>
 
-    <div class="row mt-4">
+    {{-- <div class="row mt-4">
         <div class="col">
             <div class="card">
                 <div class="card-body">
@@ -102,7 +102,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Modals outside the table to prevent duplication in DOM -->
     @foreach ($antrians as $item)
