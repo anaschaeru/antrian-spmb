@@ -41,6 +41,21 @@
     <script src="{{ asset('js/dataTables.bootstrap5.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
+        new DataTable('#tableMinatBakat', {
+            perPage: 10,
+            perPageSelect: [10, 25, 50, 100],
+            searchable: true,
+            sortable: true,
+            labels: {
+                placeholder: 'Cari...',
+                perPage: '{select} baris per halaman',
+                noRows: 'Tidak ada data yang ditemukan',
+                info: 'Menampilkan {start} sampai {end} dari {rows} baris',
+            },
+        });
+    </script>
+
     <!-- Session messages handling -->
     <script>
         @if (session('success_nomor') && session('success_tanggal'))
