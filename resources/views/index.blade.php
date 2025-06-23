@@ -11,19 +11,19 @@
             <!-- Main Action Buttons -->
             <div class="d-grid gap-3">
                 <!-- Take Queue Button -->
-                <button type="button" class="btn btn-primary py-4 fs-1" data-bs-toggle="modal"
+                <button type="button" class="btn btn-primary py-3 fs-1" data-bs-toggle="modal"
                     data-bs-target="#modalAmbilAntrian">
                     <i class="bi bi-ticket-perforated d-block"></i> Ambil Nomor Antrian
                 </button>
 
                 <!-- Print Queue Button -->
-                <button type="button" class="btn btn-outline-secondary py-4 fs-1" data-bs-toggle="modal"
+                <button type="button" class="btn btn-outline-secondary py-3 fs-1" data-bs-toggle="modal"
                     data-bs-target="#modalCetakAntrian">
                     <i class="bi bi-printer d-block"></i> Cetak Nomor Antrian
                 </button>
 
                 <!-- Test Schedule Button -->
-                <a href="{{ route('tes.minat.bakat') }}" class="btn btn-outline-success py-4 fs-1">
+                <a href="{{ route('tes.minat.bakat') }}" class="btn btn-outline-success py-3 fs-1">
                     <i class="bi bi-calendar-event d-block"></i> Lihat Jadwal Tes Minat Bakat
                 </a>
             </div>
