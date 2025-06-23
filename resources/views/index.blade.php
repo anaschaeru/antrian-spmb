@@ -13,13 +13,13 @@
                 <!-- Take Queue Button -->
                 <button type="button" class="btn btn-primary py-3 fs-1" data-bs-toggle="modal"
                     data-bs-target="#modalAmbilAntrian">
-                    <i class="bi bi-ticket-perforated d-block"></i> Ambil Nomor Antrian
+                    <i class="bi bi-ticket-perforated d-block d-none"></i> Ambil Nomor Antrian
                 </button>
 
                 <!-- Print Queue Button -->
                 <button type="button" class="btn btn-outline-secondary py-3 fs-1" data-bs-toggle="modal"
                     data-bs-target="#modalCetakAntrian">
-                    <i class="bi bi-printer d-block"></i> Cetak Nomor Antrian
+                    <i class="bi bi-printer d-block d-none"></i> Cetak Nomor Antrian
                 </button>
 
                 <!-- Test Schedule Button -->
