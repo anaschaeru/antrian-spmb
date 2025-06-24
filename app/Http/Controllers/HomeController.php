@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Antrian;
+use App\Models\BankSoal;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -55,5 +56,39 @@ class HomeController extends Controller
             ->get();
 
         return view('tes-minat-bakat', compact('testMinatBakat'));
+    }
+
+
+    public function cek(Request $request)
+    {
+        $request->validate([
+            'nomor_formulir' => 'required',
+            'tanggal_lahir' => 'required|date',
+        ]);
+
+        // Cari data peserta
+        $peserta = Antrian::where('nomor_formulir', $request->nomor_formulir)
+            ->where('tanggal_lahir', $request->tanggal_lahir)
+            ->first();
+
+        if (!$peserta || $peserta->konsentrasi_1 != $peserta->konsentrasi_1) {
+            return back()->with('error', 'Peserta tidak ditemukan.');
+        }
+
+        // Cari sesi siswa dari tabel antrian
+        $antrian = Antrian::where('nomor_formulir', $peserta->nomor_formulir)->first();
+
+        if (!$antrian) {
+            return back()->with('error', 'Sesi peserta belum tersedia.');
+        }
+
+        $sesiAktif = $antrian->sesi_tes;
+
+        // Cari soal yang cocok dengan konsentrasi dan sesi siswa
+        $soal = BankSoal::where('kode_konsentrasi_keahlian', $peserta->konsentrasi_1)
+            ->where('sesi', $antrian->sesi_tes)
+            ->first();
+
+        return view('result', compact('peserta', 'soal', 'sesiAktif'));
     }
 }

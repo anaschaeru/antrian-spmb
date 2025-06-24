@@ -14,6 +14,10 @@
             </div>
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
+                <button type="button" class="btn btn-secondary"
+                    onclick="window.location.href='{{ route('bank-soal.index') }}'">
+                    <i class="bi bi-book"></i> Bank Soal
+                </button>
                 <button type="submit" class="btn btn-danger">Logout</button>
             </form>
         </div>
@@ -40,7 +44,7 @@
         @endforeach
     </div>
 
-    {{-- <div class="row mt-4">
+    <div class="row mt-4">
         <div class="col">
             <div class="card">
                 <div class="card-body">
@@ -102,7 +106,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 
     <!-- Modals outside the table to prevent duplication in DOM -->
     @foreach ($antrians as $item)

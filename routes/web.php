@@ -20,7 +20,12 @@ Route::post('/logout', [AntrianController::class, 'logout'])->name('logout');
 Route::post('/antrian', [AntrianController::class, 'store'])->name('antrian.store');
 Route::post('/antrian/import', [AntrianController::class, 'import'])->name('antrian.import');
 Route::post('/update-status/{id}', [AntrianController::class, 'updateStatus'])->name('update.status');;
-Route::get('/tes-minat-bakat', [HomeController::class, 'tesMinatBakat'])->name('tes.minat.bakat');
 
 Route::get('/get-biodata-form/{id}', [AntrianController::class, 'getBiodataForm']);
 Route::get('/get-status-form/{id}', [AntrianController::class, 'getStatusForm']);
+
+Route::resource('bank-soal', \App\Http\Controllers\BankSoalController::class);
+
+Route::get('/tes-minat-bakat', [HomeController::class, 'tesMinatBakat'])->name('tes.minat.bakat');
+Route::get('/tes-minat-bakat-form', [HomeController::class, 'form'])->name('tes-minat.form');
+Route::post('/tes-minat-bakat-form', [HomeController::class, 'cek'])->name('tes-minat.cek');
