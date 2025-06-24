@@ -113,7 +113,7 @@
                                         'DPIB' => 'Desain Pemodelan dan Informasi Bangunan',
                                         'TKP' => 'Teknik Konstruksi dan Perumahan',
                                         'TPG' => 'Teknik Perawatan Gedung',
-                                        'TG' => 'Teknik Geomatika',
+                                        'GEO' => 'Teknik Geomatika',
                                         'RPL' => 'Rekayasa Perangkat Lunak',
                                     ];
                                 @endphp
